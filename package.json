@@ -1,0 +1,61 @@
+{
+  "name": "@easybits.cloud/confetti",
+  "version": "0.1.0",
+  "description": "Confeti de papelitos con contorno que caen girando: una función, cero dependencias, Web Animations API y se limpia solo. Incluye componente de React.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "rm -rf dist && esbuild src/index.ts src/react.tsx --bundle --splitting --format=esm --target=es2020 --platform=neutral --external:react --external:react/jsx-runtime --jsx=automatic --outdir=dist && tsc -p tsconfig.json",
+    "prepack": "npm run build",
+    "test": "esbuild src/core.test.ts --bundle --platform=node --format=esm --packages=external --outfile=.cache/confetti-test.mjs --log-level=error && node --test .cache/confetti-test.mjs"
+  },
+  "keywords": [
+    "confetti",
+    "confeti",
+    "celebration",
+    "animation",
+    "web-animations",
+    "react"
+  ],
+  "author": "bliss (@blissito)",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blissito/confetti.git"
+  },
+  "homepage": "https://github.com/blissito/confetti#readme",
+  "bugs": {
+    "url": "https://github.com/blissito/confetti/issues"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "typescript": "^5.6.0",
+    "@types/react": "^19.0.0",
+    "react": "^19.0.0"
+  }
+}

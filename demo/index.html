@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Confeti</title>
+<style>
+  :root{--bg:#f6f3fb;--ink:#111;--card:#fff;--accent:#9870ed}
+  html,body{margin:0;height:100%}
+  body{background:var(--bg);color:var(--ink);font:600 16px/1.4 system-ui,-apple-system,sans-serif;display:grid;place-items:center}
+  .card{background:var(--card);border:2px solid var(--ink);border-radius:14px;box-shadow:6px 6px 0 var(--ink);padding:28px 36px;text-align:center}
+  h1{margin:0 0 6px;font-size:30px}
+  p{margin:0 0 18px;font-weight:500;color:#444}
+  button{font:inherit;background:var(--accent);color:#fff;border:2px solid var(--ink);border-radius:10px;padding:10px 18px;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>¡Listo!</h1>
+    <p>Tu pago quedó registrado.</p>
+    <button id="fire">Otra vez 🎉</button>
+  </div>
+  <script type="module">
+    import { confetti } from "../dist/index.js";
+    const params = new URLSearchParams(location.search);
+    const loop = params.has("loop");
+    // ?seamless: escena periódica de T = 4 s para grabar el GIF sin salto. Todo dura un divisor
+    // de T: la caída 4 s, el giro 0.5/1/2 s y el vaivén 1/2 s (alternate cuenta doble: 2/4 s).
+    const T = 4000;
+    const snap = (v, options) => options.reduce((a, b) => (Math.abs(b - v) < Math.abs(a - v) ? b : a));
+    window.fire = () => {
+      if (!params.has("seamless")) return confetti({ loop });
+      const h = confetti({ loop: true, duration: [T, T], delay: [0, T] });
+      document.querySelectorAll(".ebc-rotate").forEach((el) => {
+        el.style.animationDuration = `${snap(parseFloat(el.style.animationDuration), [0.5, 1, 2])}s`;
+      });
+      document.querySelectorAll(".ebc-askew").forEach((el) => {
+        el.style.animationDuration = `${snap(parseFloat(el.style.animationDuration), [1, 2])}s`;
+      });
+      return h;
+    };
+    document.getElementById("fire").addEventListener("click", () => window.fire());
+    if (!new URLSearchParams(location.search).has("manual")) window.fire();
+  </script>
+</body>
+</html>
