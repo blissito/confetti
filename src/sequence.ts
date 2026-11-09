@@ -16,6 +16,8 @@ export function confettiSequence({ times, totalMs, ...options }: SequenceOptions
   const timer = setInterval(() => {
     if (fired >= times) {
       clearInterval(timer);
+      // Termina sola: done se resuelve cuando acaba la última tanda.
+      Promise.all(handles.map((h) => h.done)).then(() => finish());
       return;
     }
     handles.push(confetti(options));
