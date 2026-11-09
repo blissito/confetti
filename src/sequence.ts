@@ -14,10 +14,12 @@ export function confettiSequence({ times, totalMs, ...options }: SequenceOptions
   let fired = 0;
 
   const timer = setInterval(() => {
-    if (fired <= times) {
-      handles.push(confetti(options));
-      fired++;
+    if (fired >= times) {
+      clearInterval(timer);
+      return;
     }
+    handles.push(confetti(options));
+    fired++;
   }, gap);
 
   return {
