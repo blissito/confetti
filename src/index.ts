@@ -96,3 +96,4 @@ export function confetti(options: ConfettiOptions = {}): ConfettiHandle {
 }
 
 export default confetti;
+export { confettiSequence, type SequenceOptions } from "./sequence";
