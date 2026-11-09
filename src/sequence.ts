@@ -22,8 +22,17 @@ export function confettiSequence({ times, totalMs, ...options }: SequenceOptions
     fired++;
   }, gap);
 
+  let stopped = false;
+  let finish!: () => void;
+  const done = new Promise<void>((resolve) => (finish = resolve));
+
   return {
-    done: Promise.all(handles.map((h) => h.done)).then(() => {}),
-    stop: () => handles.forEach((h) => h.stop()),
+    done,
+    stop: () => {
+      stopped = true;
+      clearInterval(timer);
+      handles.forEach((h) => h.stop());
+      finish();
+    },
   };
 }
