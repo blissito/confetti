@@ -7,34 +7,3 @@ export type SequenceOptions = ConfettiOptions & {
   /** Duración total de la secuencia en ms. */
   totalMs: number;
 };
-
-export function confettiSequence({ times, totalMs, ...options }: SequenceOptions): ConfettiHandle {
-  if (!(times > 0)) throw new RangeError("confettiSequence: times debe ser mayor que 0");
-  const handles: ConfettiHandle[] = [];
-  const gap = totalMs / times;
-  let fired = 0;
-
-  const timer = setInterval(() => {
-    handles.push(confetti(options));
-    fired++;
-    if (fired >= times) {
-      clearInterval(timer);
-      // Termina sola: done se resuelve cuando acaba la última tanda.
-      Promise.all(handles.map((h) => h.done)).then(() => finish());
-    }
-  }, gap);
-
-  let stopped = false;
-  let finish!: () => void;
-  const done = new Promise<void>((resolve) => (finish = resolve));
-
-  return {
-    done,
-    stop: () => {
-      stopped = true;
-      clearInterval(timer);
-      handles.forEach((h) => h.stop());
-      finish();
-    },
-  };
-}
